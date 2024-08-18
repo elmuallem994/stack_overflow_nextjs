@@ -5,58 +5,12 @@ import NoResult from "@/components/shared/NoResult";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
+import { getQuestions } from "@/lib/actions/question.action";
 import Link from "next/link";
 
-const questions = [
-  {
-    _id: "1",
-    title: "What is TypeScript?",
-    tags: [
-      {
-        _id: "1",
-        name: "typescript",
-      },
-      {
-        _id: "2",
-        name: "javascript",
-      },
-    ],
-    author: {
-      _id: "1",
-      name: "John Doe",
-      picture: "https://example.com/john.jpg",
-    },
-    upvotes: 10,
-    views: 150,
-    answers: [],
-    createdAt: new Date("2021-09-01T12:00:00.000Z"),
-  },
-  {
-    _id: "2",
-    title: "How to use interfaces in TypeScript?",
-    tags: [
-      {
-        _id: "3",
-        name: "interfaces",
-      },
-      {
-        _id: "1",
-        name: "typescript",
-      },
-    ],
-    author: {
-      _id: "3",
-      name: "Alice Brown",
-      picture: "https://example.com/alice.jpg",
-    },
-    upvotes: 20,
-    views: 200,
-    answers: [],
-    createdAt: new Date("2022-09-01T12:00:00.000Z"),
-  },
-];
+export default async function Home() {
+  const result = await getQuestions({});
 
-const Home = () => {
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -87,8 +41,8 @@ const Home = () => {
       <HomeFilters />
 
       <div className="mt-10 flex w-full flex-col gap-6 ">
-        {questions.length > 0 ? (
-          questions.map((question) => (
+        {result.questions.length > 0 ? (
+          result.questions.map((question) => (
             <QuestionCard
               key={question._id}
               _id={question._id}
@@ -112,5 +66,4 @@ const Home = () => {
       </div>
     </>
   );
-};
-export default Home;
+}
