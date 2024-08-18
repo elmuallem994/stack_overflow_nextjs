@@ -1,8 +1,8 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isProtectedRoute = createRouteMatcher([
+// تحديد المسارات العامة
+const isPublicRoute = createRouteMatcher([
   "/",
-  "/api/webhook",
   "/question/:id",
   "/tags",
   "/tags/:id",
@@ -11,8 +11,15 @@ const isProtectedRoute = createRouteMatcher([
   "/jobs",
 ]);
 
+// تحديد المسارات التي يجب تجاهلها
+const isIgnoredRoute = createRouteMatcher(["/api/webhook", "/api/chatgpt"]);
+
 export default clerkMiddleware((auth, req) => {
-  if (isProtectedRoute(req)) auth().protect();
+  // إذا كان المسار من المسارات التي يجب تجاهلها، لا تطبق الحماية
+  if (isIgnoredRoute(req)) return;
+
+  // إذا لم يكن المسار عامًا، نطبق التحقق
+  if (!isPublicRoute(req)) auth().protect();
 });
 
 export const config = {
